@@ -1,6 +1,6 @@
-import { serve } from "https://deno.land/std@0.140.0/http/mod.ts";
-import { Bot } from "https://deno.land/x/grammy@v1.8.3/mod.ts";
-import { Env } from "https://deno.land/x/env@v2.2.0/env.js";
+import { serve } from "https://deno.land/std@0.191.0/http/mod.ts";
+import { Bot } from "https://deno.land/x/grammy@v1.16.2/mod.ts";
+import { Env } from "https://deno.land/x/env@v2.2.3/env.js";
 
 const {
   SERVER_PORT,
@@ -31,6 +31,11 @@ interface SentryEventData {
   title: string;
   // deno-lint-ignore camelcase
   web_url: string;
+  metadata?: {
+    filename: string;
+    type: string;
+    value: string;
+  };
 }
 
 const bot = new Bot(TELEGRAM_TOKEN);
@@ -71,7 +76,9 @@ const getChatId = (m: SentryEventData) => {
   return OTHER_CHAT_ID;
 };
 const formatMessage = (m: SentryEventData, isNew: boolean) => {
-  let text = `<b>${isNew ? "🟥" : "🟧"}     ${m.release} (${m.environment}) </b>`;
+  let text = `<b>${
+    isNew ? "🟥" : "🟧"
+  }     ${m.release} (${m.environment}) </b>`;
   text += `\n\n\n${escapeString(m.title)}`;
   text += `\n${escapeString(m.message)}`;
   text += `\n\n\n  ${m.datetime.toString()}`;
@@ -83,13 +90,14 @@ const formatMessage = (m: SentryEventData, isNew: boolean) => {
 await serve(async (req) => {
   let message: SentryMessageDto;
   let event: SentryEventData;
+  let json: unknown;
   let isNew = false;
 
   try {
     if (req.method !== "POST") {
       return new Response(`Method Not Allowed`, { status: 405 });
     }
-    const json = await req.json();
+    json = await req.json();
     message = json as SentryMessageDto;
     if (message.data.error) {
       isNew = true;
