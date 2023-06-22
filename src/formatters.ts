@@ -22,6 +22,9 @@ export const formatToTelegram = (m: SentryEventData, channel: string) => {
   if (m.metadata?.filename) {
     text += `\n${escapeString(m.metadata.filename)}: `;
   }
+  if (m.logger) {
+    text += `\nLogger: ${escapeString(m.logger)}: `;
+  }
   text += `\n`;
   if (m.metadata?.type && m.metadata?.value) {
     text += `<code>${m.metadata.type}:</code>`;

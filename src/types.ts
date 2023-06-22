@@ -6,6 +6,7 @@ export interface SentryMessageDto {
 }
 
 export interface SentryEventData {
+  logger: string;
   release: string;
   platform: string;
   message: string;
