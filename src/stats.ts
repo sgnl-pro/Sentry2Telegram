@@ -1,7 +1,7 @@
 class StatData {
   private boot: Date = new Date();
   private lastRequest: Date = new Date();
-  private totalRequests: number = 0;
+  private totalRequests = 0;
   private channel: Map<string, {
     total: number;
     payload: unknown;

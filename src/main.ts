@@ -1,6 +1,6 @@
 import { sentryPostHandler } from "./handlers/sentryPostHandler.ts";
 import { env } from "./helpers.ts";
-import { Bot, Menu, serve } from "./mod.ts";
+import { Bot } from "./mod.ts";
 import { stats } from "./stats.ts";
 
 const bot = new Bot(env.telegramToken);
@@ -34,7 +34,12 @@ const bot = new Bot(env.telegramToken);
 // });
 bot.start();
 
-await serve(async (req) => {
+await Deno.serve({
+  port: parseInt(env.serverPort),
+  onListen: ({ port, hostname }) => {
+    console.log(`Starting server at ${hostname}:${port}`);
+  },
+}, async (req) => {
   stats.logRequest();
 
   const url = new URL(req.url);
@@ -59,9 +64,4 @@ await serve(async (req) => {
     return await sentryPostHandler(req, bot, channelId);
   }
   return new Response(`Method Not Allowed`, { status: 405 });
-}, {
-  port: parseInt(env.serverPort),
-  onListen: ({ port, hostname }) => {
-    console.log(`Starting server at ${hostname}:${port}`);
-  },
 });

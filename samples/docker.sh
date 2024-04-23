@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PORT=18080
-DENO_VERSION=1.22.0
+DENO_VERSION=1.42.4
 TARGET=https://raw.githubusercontent.com/sgnl-pro/Sentry2Telegram/main/main.ts
 
 

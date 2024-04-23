@@ -1,6 +1,5 @@
-import { serve } from "https://deno.land/std@0.191.0/http/mod.ts";
-import { Env } from "https://deno.land/x/env@v2.2.3/env.js";
-import { existsSync } from "https://deno.land/std@0.191.0/fs/mod.ts";
+import { Env } from "https://deno.land/x/env@v3.0.2/env.js";
+import { existsSync } from "https://deno.land/std@0.223.0/fs/mod.ts";
 import { MOCK_EVENT_ALERT_TRIGGERED_WEBHOOK } from "./mocks.ts";
 
 const {
